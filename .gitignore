@@ -1,0 +1,20 @@
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Editors
+.vscode/
+.idea/
+.DS_Store
+
+# Build artifacts & scratch
+*.bin
+*.tmp
+*.o
+build/
+test/test_codec
+test/test_frames
+
+# Local secrets / overrides (keep real Wi-Fi/MQTT creds out of the repo)
+src/secrets.h
