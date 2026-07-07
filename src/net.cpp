@@ -42,6 +42,8 @@ static uint32_t g_rebootAt  = 0;
 static char     g_ip[24]    = "0.0.0.0";
 
 static String   g_ssid, g_pass, g_mqttHost;
+static bool     g_maskIds   = true;   // mask device IDs in the UI (privacy, default on)
+static bool     g_showFilter = true;  // show the filter row (some units never report it)
 
 // ---------------------------------------------------------------------------
 // Persistent config (NVS): WiFi, MQTT host, device IDs
@@ -62,6 +64,8 @@ static void loadConfig() {
     int16_t bpv = (int16_t)prefs.getInt("bp", -1);
     bool     ar = prefs.getBool("ar", false);
     bool     pl = prefs.getBool("pl", false);
+    g_maskIds    = prefs.getBool("mask", true);
+    g_showFilter = prefs.getBool("fltr", true);
     prefs.end();
     bool freshId = (us == 0);
     if (freshId) {                               // first boot: a unique serial from the chip ID
@@ -133,6 +137,8 @@ static void buildStateJson(char* out, size_t cap) {
     d["pair"]      = ps;
     d["pair_left"] = (uint32_t)(orcon::pairWindowLeftMs() / 1000);
     d["plearn"]    = orcon::passiveLearn();
+    d["mask_ids"]  = g_maskIds;
+    d["show_filter"] = g_showFilter;
     char uid[16], fid[16];
     idStr(orcon::ids().us,  uid, sizeof(uid));
     idStr(orcon::ids().fan, fid, sizeof(fid));
@@ -176,6 +182,14 @@ static void applyCommand(JsonDocument& d) {
         bool on = (int)(d["plearn"] | 0) != 0;
         orcon::setPassiveLearn(on);
         prefs.begin("orcon", false); prefs.putBool("pl", on); prefs.end();
+    }
+    if (!d["maskids"].isNull()) {                           // privacy: mask device IDs in the UI
+        g_maskIds = (int)(d["maskids"] | 0) != 0;
+        prefs.begin("orcon", false); prefs.putBool("mask", g_maskIds); prefs.end();
+    }
+    if (!d["showfilter"].isNull()) {                        // show/hide the filter row
+        g_showFilter = (int)(d["showfilter"] | 0) != 0;
+        prefs.begin("orcon", false); prefs.putBool("fltr", g_showFilter); prefs.end();
     }
     if (!d["selftest"].isNull()) orcon::setSelftest((int)(d["selftest"] | 0) != 0);
     if (!d["connect"].isNull())  orcon::sendConnect();

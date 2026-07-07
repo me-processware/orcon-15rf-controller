@@ -80,6 +80,7 @@ bool sendDemand(uint8_t percent);
 bool sendCo2(uint16_t ppm);
 bool sendDeviceInfo();
 bool requestStatus();
+bool requestFilter();
 
 void tick(uint32_t nowMs);
 bool onFrame(const ramses::Frame& f);

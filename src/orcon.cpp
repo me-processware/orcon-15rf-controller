@@ -13,6 +13,7 @@ static State g_state;
 static bool  g_fanSerialFixed = false;
 
 static uint32_t g_lastCo2    = 0;
+static uint32_t g_lastFilter = 0;
 static uint32_t g_lastDemand = 0;
 static uint32_t g_lastInfo   = 0;
 static uint32_t g_lastStatus = 0;
@@ -154,6 +155,7 @@ bool sendDemand(uint8_t percent) {
 bool sendCo2(uint16_t ppm)  { g_state.co2 = ppm; return tx(make1298(g_ids, ppm)); }
 bool sendDeviceInfo()       { return tx(make10E0(g_ids)); }
 bool requestStatus()        { g_state.lastCmdMs = millis(); return tx(makeRequest(g_ids, 0x31DA)); }
+bool requestFilter()        { return tx(makeRequest(g_ids, 0x10D0)); }   // ask the fan for filter status
 bool setBypass(uint8_t val) { return tx(make22F7(g_ids, val)); }
 bool setFanSpeed(uint8_t p, uint8_t pct) { return tx(makeFanSpeed(g_ids, p, pct)); }
 
@@ -209,8 +211,9 @@ void tick(uint32_t now) {
         }
         return;
     }
-    if (!g_bootReq && now > 8000)                      { g_bootReq = true; requestStatus(); }   // populate after reboot
+    if (!g_bootReq && now > 8000)                      { g_bootReq = true; requestStatus(); requestFilter(); }  // populate after reboot
     if (now - g_lastStatus >= SEND_STATUS_INTERVAL_MS) { g_lastStatus = now; requestStatus(); }  // keep live values fresh
+    if (now - g_lastFilter >= 600000UL)                { g_lastFilter = now; requestFilter(); }  // poll 10D0 filter status every 10 min
     if (now - g_lastDemand >= SEND_DEMAND_INTERVAL_MS) { g_lastDemand = now; sendDemand(g_state.demand); }
     if (now - g_lastCo2 >= SEND_CO2_INTERVAL_MS)       { g_lastCo2 = now; if (g_state.co2) sendCo2(g_state.co2); }
     if (now - g_lastInfo >= SEND_DEVINFO_INTERVAL_MS)  { g_lastInfo = now; sendDeviceInfo(); }

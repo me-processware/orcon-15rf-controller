@@ -11,6 +11,11 @@ path, not the motor).
 > Unofficial and reverse-engineered from community work. Not affiliated with
 > Orcon. See [`CREDITS.md`](CREDITS.md). MIT licensed — see [`LICENSE`](LICENSE).
 
+> ⚠️ **Work in progress.** This controls a real HRC400 reliably today, but it's an
+> active project with rough edges — the on-screen 480×480 touch UI isn't polished
+> yet, and the SX1276 build is freshly brought up. See
+> [Project status](#project-status) before relying on it.
+
 ---
 
 ## What it does
@@ -29,6 +34,15 @@ path, not the motor).
   auto-generates a unique controller ID on first boot.
 - **Interfaces**: onboard web UI, MQTT (with Home Assistant auto-discovery), an
   embeddable airflow widget, and — on the Guition panel — an on-screen touch UI.
+
+## Screenshots
+
+| Web control page | Airflow widget | Touch display *(WIP)* |
+|:---:|:---:|:---:|
+| ![Web control UI](docs/img/web-control.png) | ![Airflow widget](docs/img/airflow-widget.png) | ![4848S040 touch UI](docs/img/display-4848.png) |
+
+<sub>Drop PNGs in `docs/img/` with these filenames to populate the table. The
+touch-display shot is a work in progress — see below.</sub>
 
 ## Radio options (important)
 
@@ -129,12 +143,23 @@ g++ -std=c++17 -I../src test_codec.cpp  ../src/ramses_codec.cpp                 
 g++ -std=c++17 -I../src test_frames.cpp ../src/ramses_codec.cpp ../src/orcon_frames.cpp  -o test_frames && ./test_frames
 ```
 
-## Status & caveats
+## Project status
 
-- **Proven on hardware**: CC1101 RX+TX (Heltec + Guition), SX1276 RX+TX (Heltec V2),
-  full control of a real HRC400, `31DA` decoding calibrated against the unit.
-- **Model-specific**: `31DA` offsets and some tail bytes may vary across the
-  HRC/MVS family — the `/debug` byte rulers make these easy to re-check.
-- Reverse-engineered, unofficial, no warranty. See [`CREDITS.md`](CREDITS.md).
+**Works today:**
+- CC1101 RX+TX (Heltec + Guition), SX1276 RX+TX (Heltec V2)
+- Full control of a real HRC400 — modes, timed boost, bypass, AC mode
+- Web UI, MQTT + Home Assistant discovery, deliberate pairing
+- `31DA` decoding calibrated against a real unit
+
+**Work in progress / rough edges:**
+- 🚧 The **480×480 touch UI** (Guition 4848S040) is functional but **not visually
+  polished** — spacing/layout and the airflow page still need design work.
+- 🚧 The **SX1276 single-board** build is freshly brought up; FSK bandwidth/
+  deviation may need per-environment tuning.
+- 🚧 **Multi-day durability** soak is ongoing.
+- ⚠️ `31DA` byte offsets and some tail bytes are calibrated to one HRC400; other
+  HRC/MVS models may differ — the `/debug` byte rulers make these easy to re-check.
+
+Reverse-engineered, unofficial, no warranty. See [`CREDITS.md`](CREDITS.md).
 
 Full protocol write-up: [`docs/PROTOCOL.md`](docs/PROTOCOL.md).

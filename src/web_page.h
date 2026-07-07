@@ -87,7 +87,7 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <div class="row"><b>Humidity</b><span><span id="rh">–</span>%</span></div>
 <div class="row"><b>CO₂</b><span><span id="co2">–</span>ppm</span></div>
 <div class="row"><b>Bypass</b><span id="byp">–</span></div>
-<div class="row"><b>Filter</b><span><span id="flt">–</span>%</span></div>
+<div class="row" id="filtrow"><b>Filter</b><span><span id="flt">–</span>%</span></div>
 </div>
 <div id="fault" class="flt" style="display:none;margin-top:8px">⚠ Fan reports a fault</div>
 </div>
@@ -137,6 +137,8 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <button style="width:100%;margin-top:8px" data-connect>Connect / RF-check (send RQ 0001)</button>
 <button style="width:100%;margin-top:8px" data-status>Read live status (RQ 31DA)</button>
 <label style="display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px;margin-top:10px"><input type="checkbox" id="pl"> Auto-learn fan from any broadcast (advanced — normally use Pair)</label>
+<label style="display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px;margin-top:10px"><input type="checkbox" id="maskids"> Mask device IDs in the UI (privacy / safe screenshots)</label>
+<label style="display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px;margin-top:10px"><input type="checkbox" id="showfilter"> Show filter status row</label>
 <div id="ack" style="margin-top:8px;font-weight:600"></div>
 <div id="tst" class="small" style="margin-top:8px"></div>
 <div class="small" style="margin-top:10px">Send raw frame to fan:</div>
@@ -156,6 +158,7 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 </div>
 <script>
 const $=s=>document.querySelector(s);
+function fmtId(id,mask){if(!id)return id||'';if(!mask)return id;const p=(''+id).split(':');if(p.length!==2||p[1].length<4)return id;return p[0]+':'+p[1].slice(0,2)+'••'+p[1].slice(-2);}
 $('#setBtn').onclick=()=>{const a=$('#adv'),v=a.style.display==='none';a.style.display=v?'block':'none';$('#setBtn').textContent=v?'⚙ Hide settings':'⚙ Settings & advanced';};
 function send(body){return fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
 function pollSoon(){setTimeout(()=>send({status:1}).then(refresh),3000);}  // re-read the unit a few s after a command
@@ -173,6 +176,8 @@ document.querySelector('[data-reapply]').onclick=()=>send({reapply:1});
 document.querySelector('[data-forget]').onclick=()=>{if(confirm('Forget all saved settings?'))send({forget:1}).then(()=>setTimeout(refresh,300));};
 document.querySelectorAll('[data-pair]').forEach(b=>b.onclick=()=>{send({pair:1}).then(()=>setTimeout(refresh,400));});
 if($('#pl'))$('#pl').onchange=e=>send({plearn:e.target.checked?1:0});
+if($('#maskids'))$('#maskids').onchange=e=>send({maskids:e.target.checked?1:0}).then(()=>setTimeout(refresh,300));
+if($('#showfilter'))$('#showfilter').onchange=e=>send({showfilter:e.target.checked?1:0}).then(()=>setTimeout(refresh,300));
 document.querySelector('[data-selftest]').onclick=()=>send({selftest:1});
 document.querySelector('[data-connect]').onclick=()=>send({connect:1});
 document.querySelector('[data-raw]').onclick=()=>send({raw_type:$('#rty').value,raw_code:$('#rco').value.trim(),raw_pl:$('#rpl').value.replace(/\s+/g,'')});
@@ -211,16 +216,19 @@ function refresh(){fetch('/api/state').then(r=>r.json()).then(s=>{
     if(s.saved[5]>=0){$('#ace').value=s.saved[5];$('#acev').textContent=s.saved[5];}}
  $('#flt').textContent=(s.filter===255?'–':num(s.filter));
  $('#fault').style.display=s.fault?'block':'none';
- $('#fan').textContent=s.fan_known?s.fan_id:'unknown';
+ $('#fan').textContent=s.fan_known?fmtId(s.fan_id,s.mask_ids):'unknown';
  if($('#pairLink')){
-   $('#pairLink').textContent=s.fan_known?s.fan_id:'not paired';
+   $('#pairLink').textContent=s.fan_known?fmtId(s.fan_id,s.mask_ids):'not paired';
    var pm=$('#pairMsg');
    if(s.pair==='searching')pm.innerHTML='🔍 Searching… power-cycle your Orcon to put it in pairing mode. '+(s.pair_left||0)+'s left';
-   else if(s.pair==='paired')pm.innerHTML='<span style="color:var(--ok)">✓ Paired with '+s.fan_id+'</span>';
+   else if(s.pair==='paired')pm.innerHTML='<span style="color:var(--ok)">✓ Paired with '+fmtId(s.fan_id,s.mask_ids)+'</span>';
    else if(s.pair==='timeout')pm.innerHTML='<span style="color:var(--warn)">No fan found.</span> Power-cycle the Orcon and tap Pair again.';
    else pm.textContent='Power-cycle your Orcon, then tap Pair within 3 minutes.';
  }
  if($('#pl'))$('#pl').checked=!!s.plearn;
+ if($('#maskids'))$('#maskids').checked=!!s.mask_ids;
+ if($('#showfilter'))$('#showfilter').checked=!!s.show_filter;
+ if($('#filtrow'))$('#filtrow').style.display=(s.show_filter===false)?'none':'';
  $('#rssi').textContent=num(s.rssi);$('#radio').textContent=s.radio||'';
  ('cc1101' in s)?($('#cc').textContent=(s.cc1101===0||s.cc1101===255)?('not found ('+s.cc1101+')'):('0x'+s.cc1101.toString(16)+' OK')):($('#cc').textContent='n/a');
  $('#dot').className='dot'+(s.online?' on':'');
