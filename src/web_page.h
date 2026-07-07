@@ -18,6 +18,8 @@ h1{font-size:18px;margin:6px 0 14px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 button{font:inherit;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:10px;padding:12px 8px;cursor:pointer}
 button:active{transform:scale(.97)}button.sel{background:var(--acc);border-color:var(--acc);color:#04121f;font-weight:600}
+button:has(svg.ic){display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;line-height:1.15}
+.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .row{display:flex;justify-content:space-between;padding:6px 2px;border-bottom:1px solid #232c38}
 .row:last-child{border:0}.row b{color:var(--mut);font-weight:500}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
@@ -26,9 +28,13 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 .bar{height:6px;background:#26303c;border-radius:3px;overflow:hidden;margin-top:4px}.bar>i{display:block;height:100%;background:var(--acc)}
 .hvflow{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:0.5 13;animation:hvm 2s linear infinite}
 @keyframes hvm{to{stroke-dashoffset:-27}}
+.cols{display:grid;grid-template-columns:1fr}
+.col{min-width:0}
+@media(min-width:760px){.wrap{max-width:900px}.cols{grid-template-columns:1fr 1fr;column-gap:16px;align-items:start}}
 </style></head><body><div class="wrap">
 <h1><span id="dot" class="dot"></span> Orcon 15RF <span id="mode" class="small"></span></h1>
 
+<div class="cols"><div class="col">
 <div class="card" style="padding:8px">
 <svg viewBox="0 0 360 250" style="width:100%;display:block">
 <defs><marker id="hvarr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
@@ -62,21 +68,23 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 
 <div class="card"><div class="small" style="margin-bottom:8px">Mode</div>
 <div class="grid">
-<button data-m="away">Away</button><button data-m="auto">Auto</button><button data-m="low">1</button>
-<button data-m="medium">2</button><button data-m="high">3</button><button data-m="boost">Boost</button>
+<button data-m="away"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Away</button><button data-m="auto"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 15l2.7-6 2.7 6"/><path d="M10.1 13.2h3.8"/></svg>Auto</button><button data-m="low"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>1</button>
+<button data-m="medium"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>2</button><button data-m="high"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>3</button><button data-m="boost"><svg class="ic" viewBox="0 0 24 24"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg>Boost</button>
 </div></div>
 
-<div class="card" id="pairCard"><div class="small" style="margin-bottom:8px">Pairing</div>
-<div class="row"><b>Fan link</b><span id="pairLink">–</span></div>
-<button style="width:100%;margin-top:10px" data-pair>Pair with my Orcon</button>
-<div id="pairMsg" class="small" style="margin-top:8px">Power-cycle your Orcon, then tap Pair within 3 minutes.</div>
+<div class="card"><div class="small" style="margin-bottom:8px">Bypass</div>
+<div class="grid">
+<button data-bypass="open"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/></svg>Open</button><button data-bypass="auto"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 15l2.7-6 2.7 6"/><path d="M10.1 13.2h3.8"/></svg>Auto</button><button data-bypass="close"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c2.5 3.5 4 5.5 4 8a4 4 0 0 1-8 0c0-1.6.8-2.8 1.6-3.6.8 1.4 1.7 1.6 2.4.4z"/></svg>Close</button>
+</div>
+<div class="row" style="margin-top:8px"><b>Current</b><span id="byp2">–</span></div>
 </div>
 
 <div class="card"><div class="small" style="margin-bottom:8px">Timed boost (high)</div>
 <div class="grid">
-<button data-t="15">15 min</button><button data-t="30">30 min</button><button data-t="60">60 min</button>
+<button data-t="15"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>15 min</button><button data-t="30"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>30 min</button><button data-t="60"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>60 min</button>
 </div></div>
 
+</div><div class="col">
 <div class="card"><div class="metrics">
 <div class="row"><b>Supply</b><span><span id="sup">–</span>%</span></div>
 <div class="row"><b>Exhaust</b><span><span id="exh">–</span>%</span></div>
@@ -90,13 +98,6 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <div class="row" id="filtrow"><b>Filter</b><span><span id="flt">–</span>%</span></div>
 </div>
 <div id="fault" class="flt" style="display:none;margin-top:8px">⚠ Fan reports a fault</div>
-</div>
-
-<div class="card"><div class="small" style="margin-bottom:8px">Bypass</div>
-<div class="grid">
-<button data-bypass="open">Open</button><button data-bypass="auto">Auto</button><button data-bypass="close">Close</button>
-</div>
-<div class="row" style="margin-top:8px"><b>Current</b><span id="byp2">–</span></div>
 </div>
 
 <div class="card"><div class="small" style="margin-bottom:8px">AC mode (unbalanced — reconfigures High)</div>
@@ -115,8 +116,15 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <div class="small" style="margin-top:6px">One tap: sets the High preset's fans, opens the bypass, and switches to High. "Balanced" restores 50/50 + auto bypass. Remembered across power loss. (Your unit may enforce a minimum fan speed, so 0% can come out as ~10–15%.)</div>
 </div>
 
+</div></div>
 <button id="setBtn" style="width:100%;margin-bottom:14px;background:#1a212b;border:1px solid #313d4c">⚙ Settings &amp; advanced</button>
 <div id="adv" style="display:none">
+
+<div class="card"><div class="small" style="margin-bottom:8px">Pairing</div>
+<div class="row"><b>Fan link</b><span id="pairLink">–</span></div>
+<button style="width:100%;margin-top:10px" data-pair>Pair with my Orcon</button>
+<div id="pairMsg" class="small" style="margin-top:8px">Power-cycle your Orcon, then tap Pair within 3 minutes.</div>
+</div>
 
 <div class="card"><div class="small" style="margin-bottom:8px">Settings keeper (survive Orcon power loss)</div>
 <label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px"><input type="checkbox" id="ar"> Auto-restore after the unit reboots</label>
@@ -131,9 +139,7 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <div class="row"><b>Fan link</b><span id="fan">unknown</span></div>
 <div class="row"><b>RSSI</b><span><span id="rssi">–</span> dBm</span></div>
 <div class="row"><b>Radio</b><span id="radio">–</span></div>
-<div class="row"><b>CC1101</b><span id="cc">–</span></div>
-<button style="width:100%;margin-top:10px" data-pair>Pair with fan (open its window first)</button>
-<button style="width:100%;margin-top:8px" data-selftest>Start TX self-test (Away&#8644;High, 2 min)</button>
+<div class="row"><b>CC1101</b><span id="cc">–</span></div><button style="width:100%;margin-top:8px" data-selftest>Start TX self-test (Away&#8644;High, 2 min)</button>
 <button style="width:100%;margin-top:8px" data-connect>Connect / RF-check (send RQ 0001)</button>
 <button style="width:100%;margin-top:8px" data-status>Read live status (RQ 31DA)</button>
 <label style="display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px;margin-top:10px"><input type="checkbox" id="pl"> Auto-learn fan from any broadcast (advanced — normally use Pair)</label>

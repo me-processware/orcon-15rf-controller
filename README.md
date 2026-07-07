@@ -61,6 +61,43 @@ For a clean build, use **CC1101** (any USB-C ESP32-S3 + a CC1101 module) or an
 SX1276 board. See [`docs/PROTOCOL.md`](docs/PROTOCOL.md) for the SX1276 direct-mode
 write-up.
 
+## Help wanted: SX1262 single-board RX 🆘
+
+The nicest outcome would be a **single-board build on the Heltec V3/V4** (ESP32-S3 +
+SX1262, USB-C) with **no external CC1101** — but receive doesn't work. Here's exactly
+what we tried and why it fails, in case someone in the community has cracked it.
+
+**The core problem:** the SX126x family has **no transparent / continuous / direct
+FSK mode**. On the CC1101 and SX127x you can stream the raw demodulated bitstream out
+a GPIO into a UART and decode RAMSES in software (that's how this project works).
+The SX1262 can't do that — everything must go through its packet engine.
+
+**What works — TX.** We build the whole on-air frame (preamble + sync + Manchester
+payload) in firmware and transmit it as a raw fixed-length GFSK packet; the radio
+just modulates our bits. The fan obeys.
+
+**What fails — RX.** We tried:
+
+- `beginFSK(868.3, 38.4, 50.78, rxBw)`, NRZ encoding, CRC **off**, whitening **off**
+- sync word set to a slice of the RAMSES preamble/sync (`55 53`), a fixed-length
+  receive window, then software de-frame + Manchester decode
+- `setDio2AsRfSwitch(true)` + `setTCXO(1.6)` — **mandatory** on Heltec: the antenna is
+  routed through an RF switch on DIO2, so without this the radio is electrically deaf
+
+Result: **RSSI reads correctly** (antenna path is fine), but the packet engine
+**never declares a valid RAMSES packet** — `rx_n` stays 0. RAMSES is variable-length,
+Manchester-coded, with framing the SX1262's engine can't match (no length byte where
+it expects one), and there's no raw-bit mode to bypass the engine and decode in
+software the way we do on the CC1101.
+
+**Ideas welcome — please [open an issue or discussion](../../issues).** Things we
+haven't fully explored: continuous RX into a large fixed-length buffer with sync
+detection done in software; alternative sync-word / preamble slicing; reading the
+FIFO mid-packet; or any register-level trick to expose raw data on a DIO. Even a
+definitive *"no, it's genuinely impossible on SX126x because X"* would be useful.
+
+Until then, **CC1101** (external) or **SX1276** (on-board) are the working paths.
+
 ## Supported boards / build envs
 
 Defined in `platformio.ini`:
