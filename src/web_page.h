@@ -79,11 +79,6 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <div class="row" style="margin-top:8px"><b>Current</b><span id="byp2">–</span></div>
 </div>
 
-<div class="card"><div class="small" style="margin-bottom:8px">Timed boost (high)</div>
-<div class="grid">
-<button data-t="15"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>15 min</button><button data-t="30"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>30 min</button><button data-t="60"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>60 min</button>
-</div></div>
-
 </div><div class="col">
 <div class="card"><div class="metrics">
 <div class="row"><b>Supply</b><span><span id="sup">–</span>%</span></div>
@@ -115,6 +110,11 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <button style="width:100%;margin-top:8px" data-accustom>Apply custom</button>
 <div class="small" style="margin-top:6px">One tap: sets the High preset's fans, opens the bypass, and switches to High. "Balanced" restores 50/50 + auto bypass. Remembered across power loss. (Your unit may enforce a minimum fan speed, so 0% can come out as ~10–15%.)</div>
 </div>
+
+<div class="card"><div class="small" style="margin-bottom:8px">Timed boost (high)</div>
+<div class="grid">
+<button data-t="15"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>15 min</button><button data-t="30"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>30 min</button><button data-t="60"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>60 min</button>
+</div></div>
 
 </div></div>
 <button id="setBtn" style="width:100%;margin-bottom:14px;background:#1a212b;border:1px solid #313d4c">⚙ Settings &amp; advanced</button>
