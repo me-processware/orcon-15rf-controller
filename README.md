@@ -39,10 +39,7 @@ path, not the motor).
 
 | Web control page | Airflow widget | Touch display *(WIP)* |
 |:---:|:---:|:---:|
-| ![Web control UI](docs/img/web-control.png) | ![Airflow widget](docs/img/airflow-widget.png) | ![4848S040 touch UI](docs/img/display-4848.png) |
-
-<sub>Drop PNGs in `docs/img/` with these filenames to populate the table. The
-touch-display shot is a work in progress — see below.</sub>
+| ![Web control UI](docs/img/web-control.png) | ![Airflow widget](docs/img/airflow-widget.png) | _📷 coming soon_ |
 
 ## Radio options (important)
 
