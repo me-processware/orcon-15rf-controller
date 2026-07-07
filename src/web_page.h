@@ -405,6 +405,8 @@ body{font:14px/1.35 system-ui,sans-serif;background:var(--bg);color:var(--fg);pa
 .g b{color:var(--mut);font-weight:500}
 .btns{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:5px}
 button{font:inherit;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:8px;padding:8px 4px;cursor:pointer}
+.btns button{display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1.1}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 button:active{transform:scale(.96)}button.sel{background:var(--acc);border-color:var(--acc);color:#04121f;font-weight:600}
 .lbl{font-size:11px;color:var(--mut);margin:6px 0 2px}
 a{color:var(--mut);font-size:11px;text-decoration:none}
@@ -420,12 +422,12 @@ a{color:var(--mut);font-size:11px;text-decoration:none}
 </div>
 <div class="lbl">Mode</div>
 <div class="btns">
-<button data-m="away">Away</button><button data-m="auto">Auto</button><button data-m="low">1</button>
-<button data-m="medium">2</button><button data-m="high">3</button><button data-m="boost">Boost</button>
+<button data-m="away"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Away</button><button data-m="auto"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 15l2.7-6 2.7 6"/><path d="M10.1 13.2h3.8"/></svg>Auto</button><button data-m="low"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>1</button>
+<button data-m="medium"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>2</button><button data-m="high"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>3</button><button data-m="boost"><svg class="ic" viewBox="0 0 24 24"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg>Boost</button>
 </div>
 <div class="lbl">Bypass</div>
 <div class="btns">
-<button data-b="open">Open</button><button data-b="auto">Auto</button><button data-b="close">Close</button>
+<button data-b="open"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/></svg>Open</button><button data-b="auto"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 15l2.7-6 2.7 6"/><path d="M10.1 13.2h3.8"/></svg>Auto</button><button data-b="close"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c2.5 3.5 4 5.5 4 8a4 4 0 0 1-8 0c0-1.6.8-2.8 1.6-3.6.8 1.4 1.7 1.6 2.4.4z"/></svg>Close</button>
 </div>
 <a href="/" target="_top">full control &rarr;</a>
 <script>
@@ -622,7 +624,8 @@ body{font:14px system-ui,sans-serif;color:var(--fg);padding:6px}
 .hvflow{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:0.5 13;animation:hvm 2s linear infinite}
 @keyframes hvm{to{stroke-dashoffset:-27}}
 .btns{display:flex;gap:4px;margin-top:6px}
-.btns button{flex:1;font:600 12px system-ui;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:8px;padding:9px 2px;cursor:pointer}
+.btns button{flex:1;font:600 11px system-ui;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:8px;padding:8px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ic{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btns button:active{transform:scale(.96)}
 .btns button.sel{background:var(--acc);border-color:var(--acc);color:#04121f}
 .ov{position:fixed;inset:0;background:rgba(6,10,15,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:9}
@@ -666,13 +669,13 @@ body{font:14px system-ui,sans-serif;color:var(--fg);padding:6px}
 <text id="hvCo2" x="348" y="218" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">&#8211; ppm</text>
 </svg>
 <div class="btns">
-<button data-m="away">Away</button>
-<button data-pop="byp">Bypass</button>
-<button data-m="low">1</button>
-<button data-m="medium">2</button>
-<button data-m="high">3</button>
-<button data-m="boost">Boost</button>
-<button data-pop="cust">AC</button>
+<button data-m="away"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Away</button>
+<button data-pop="byp"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/></svg>Bypass</button>
+<button data-m="low"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>1</button>
+<button data-m="medium"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>2</button>
+<button data-m="high"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>3</button>
+<button data-m="boost"><svg class="ic" viewBox="0 0 24 24"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg>Boost</button>
+<button data-pop="cust"><svg class="ic" viewBox="0 0 24 24"><path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="2"/><circle cx="9" cy="16" r="2"/></svg>AC</button>
 </div>
 <div class="ov" id="ovByp"><div class="pop">
 <span class="x" data-close>&times;</span><h3>Bypass</h3>
