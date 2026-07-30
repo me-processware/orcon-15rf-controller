@@ -136,13 +136,17 @@ Home Assistant auto-discovery is published on connect (also works with Domoticz)
 
 ## Airflow widget
 
-A self-contained page at **`/widget.html`** shows an animated house — supply air
-routed **through** the heat-exchanger core (bypass closed) or **around** it
-(bypass open) — with live temps/RH/CO₂ and a row of quick buttons
-(Away · Bypass · 1 · 2 · 3 · Boost · AC). Embed it in a dashboard:
+A self-contained page at **`/widget.html`** shows a **photoreal cutaway** of the
+house with the live airflow drawn over it — supply air routed **through** the
+heat-exchanger core (bypass closed) or **around** it (bypass open), direction
+arrows, and live mode / humidity / CO₂ / filter. Optional **per-room
+temperatures** appear on each room once you map a Domoticz sensor IDX to it
+(⚙ Settings → *Room temperatures*, fed live from the broker's `domoticz/out`
+feed). A side panel carries Mode / Bypass / supply–exhaust balance / timed-boost
+controls. Embed it in a dashboard:
 
 ```html
-<iframe src="http://orcon15rf.local/widget.html" style="width:320px;height:420px;border:0"></iframe>
+<iframe src="http://orcon15rf.local/widget.html" style="width:1000px;height:360px;border:0"></iframe>
 ```
 
 ## On-screen UI (Guition 4848S040)
