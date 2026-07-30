@@ -18,3 +18,10 @@ test/test_frames
 
 # Local secrets / overrides (keep real Wi-Fi/MQTT creds out of the repo)
 src/secrets.h
+
+# Scratch previews + large source art (the small embedded webp + header ship)
+_*.html
+docs/img/house-cutaway.png
+docs/img/house_cutaway_base*.png
+docs/img/_try_*
+docs/img/_q_*

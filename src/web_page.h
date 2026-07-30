@@ -26,8 +26,16 @@ button:has(svg.ic){display:flex;flex-direction:column;align-items:center;justify
 input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 .small{font-size:12px;color:var(--mut)}.flt{color:var(--warn);font-weight:600}
 .bar{height:6px;background:#26303c;border-radius:3px;overflow:hidden;margin-top:4px}.bar>i{display:block;height:100%;background:var(--acc)}
-.hvflow{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:0.5 13;animation:hvm 2s linear infinite}
-@keyframes hvm{to{stroke-dashoffset:-27}}
+.hvflow{fill:none;stroke-width:3.4;stroke-linecap:round;stroke-dasharray:0.5 6;animation:hvm 1.6s linear infinite;filter:drop-shadow(0 0 2.5px rgba(0,0,0,.95))}
+@keyframes hvm{to{stroke-dashoffset:-13}}
+.imgw{position:relative}.imgw>img{width:100%;display:block;border-radius:11px}
+.ov2{position:absolute;inset:0;width:100%;height:100%}
+.jn{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);border:1.5px solid #0e1218;box-shadow:0 0 3px rgba(0,0,0,.9);z-index:5}
+.jn.s{background:var(--acc)}.jn.e{background:#e9885a}
+.duct{fill:none;stroke:rgba(255,255,255,.35);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 2px rgba(0,0,0,.8))}
+.hpin{position:absolute;transform:translate(-50%,-50%);background:rgba(10,14,20,.74);color:#fff;font:600 12px system-ui;padding:2px 8px;border-radius:20px;white-space:nowrap;border:1px solid rgba(255,255,255,.16)}
+.hpin small{font-weight:400;opacity:.75;font-size:10px}.hpin.out{color:#9fd0ff}
+.hstat{position:absolute;right:9px;top:9px;background:rgba(10,14,20,.74);color:#fff;font:600 11px system-ui;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.16)}
 .cols{display:grid;grid-template-columns:1fr}
 .col{min-width:0}
 @media(min-width:760px){.wrap{max-width:900px}.cols{grid-template-columns:1fr 1fr;column-gap:16px;align-items:start}}
@@ -35,36 +43,43 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <h1><span id="dot" class="dot"></span> Orcon 15RF <span id="mode" class="small"></span></h1>
 
 <div class="cols"><div class="col">
-<div class="card" style="padding:8px">
-<svg viewBox="0 0 360 250" style="width:100%;display:block">
-<defs><marker id="hvarr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-<rect x="1" y="1" width="358" height="248" rx="11" fill="#0e1218"/>
-<text x="14" y="22" fill="var(--fg)" style="font:600 13px system-ui">House airflow</text>
-<text id="hvStat" x="346" y="22" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">&#8211;</text>
-<line x1="14" y1="226" x2="346" y2="226" stroke="#2a3340" stroke-width="2" stroke-linecap="round"/>
-<path d="M150,106 L250,60 L350,106 Z" fill="#1c2530" stroke="#44535f" stroke-width="1.5"/>
-<rect x="150" y="106" width="200" height="120" rx="3" fill="#161e27" stroke="#44535f" stroke-width="1.5"/>
-<rect id="hvBox" x="232" y="150" width="58" height="60" rx="6" fill="#26303c" stroke="#44535f" stroke-width="1.5"/>
-<line x1="238" y1="156" x2="284" y2="204" stroke="var(--acc)" stroke-width="1.5" opacity="0.45"/>
-<line x1="284" y1="156" x2="238" y2="204" stroke="#e9885a" stroke-width="1.5" opacity="0.45"/>
-<text x="261" y="224" text-anchor="middle" fill="var(--mut)" style="font:10px system-ui">heat exch.</text>
-<text x="22" y="52" fill="var(--mut)" style="font:11px system-ui">outside</text>
-<text id="hvOut" x="20" y="84" fill="#9fd0ff" style="font:500 22px system-ui">&#8211;</text>
-<line x1="14" y1="196" x2="322" y2="196" stroke="#222b35" stroke-width="6" stroke-linecap="round"/>
-<path id="hvExhFlow" class="hvflow" d="M322,196 L14,196" stroke="#e9885a" marker-end="url(#hvarr)"/>
-<text id="hvExh" x="58" y="188" fill="#e9885a" style="font:11px system-ui">exhaust</text>
-<line x1="14" y1="168" x2="196" y2="168" stroke="#222b35" stroke-width="6" stroke-linecap="round"/>
-<line x1="196" y1="168" x2="332" y2="168" stroke="#222b35" stroke-width="6" stroke-linecap="round" opacity="0.3"/>
-<path d="M196,168 L196,118 L305,118 L305,168" fill="none" stroke="#222b35" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
-<path id="hvSupIn" class="hvflow" d="M14,168 L196,168" stroke="var(--acc)"/>
-<path id="hvSupThru" class="hvflow" d="M196,168 L332,168" stroke="var(--acc)" marker-end="url(#hvarr)"/>
-<path id="hvSupBypass" class="hvflow" d="M196,168 L196,118 L305,118 L305,168" stroke="var(--acc)" marker-end="url(#hvarr)"/>
-<text id="hvSup" x="58" y="160" fill="var(--acc)" style="font:11px system-ui">supply</text>
-<text id="hvIn" x="348" y="132" text-anchor="end" fill="var(--fg)" style="font:500 22px system-ui">&#8211;</text>
-<text x="348" y="148" text-anchor="end" fill="var(--mut)" style="font:10px system-ui">inside</text>
-<text id="hvRh" x="348" y="202" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">RH &#8211;%</text>
-<text id="hvCo2" x="348" y="218" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">&#8211; ppm</text>
-</svg></div>
+<div class="card imgw" style="padding:0;overflow:hidden">
+<img src="house.jpg" alt="house">
+<div class="hstat" id="hvStat">&#8211;</div>
+<svg class="ov2" viewBox="0 0 100 100" preserveAspectRatio="none">
+<defs><marker id="harU" viewBox="0 0 10 10" refX="5" refY="4" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 8L5 2L9 8" fill="none" stroke="context-stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="harD" viewBox="0 0 10 10" refX="5" refY="6" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 2L5 8L9 2" fill="none" stroke="context-stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<path class="duct" d="M37,33 L37,82"/><path class="duct" d="M44,82 L44,15"/>
+<path class="duct" d="M37,50 L27,50"/><path class="duct" d="M37,50 L46,50"/><path class="duct" d="M37,79 L26,79"/><path class="duct" d="M40,28 L58,28"/>
+<path class="duct" d="M44,70 L49,70"/><path class="duct" d="M44,46 L67,46"/><path class="duct" d="M44,78 L61,78"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,50 L27,50"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,50 L46,50"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,79 L26,79"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M40,28 L58,28"/>
+<path class="hvflow" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,70 L49,70"/>
+<path class="hvflow" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,46 L67,46"/>
+<path class="hvflow" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,78 L61,78"/>
+<path class="hvflow" id="fl_sup" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,33 L37,82" marker-end="url(#harD)"/>
+<path class="hvflow" id="fl_thru" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,20 L37,33" style="opacity:.15"/>
+<path class="hvflow" id="fl_byp" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,20 L45,26 L37,33"/>
+<path class="hvflow" id="fl_exh" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,82 L44,15" marker-end="url(#harU)"/>
+</svg>
+<div class="jn s" style="left:27%;top:50%"></div>
+<div class="jn s" style="left:46%;top:50%"></div>
+<div class="jn s" style="left:26%;top:79%"></div>
+<div class="jn s" style="left:58%;top:28%"></div>
+<div class="jn e" style="left:49%;top:70%"></div>
+<div class="jn e" style="left:67%;top:46%"></div>
+<div class="jn e" style="left:61%;top:78%"></div>
+<div class="hpin out" id="hvOut" style="left:8%;top:16%">&#8211;</div>
+<div class="hpin" id="rm_attic" style="left:58%;top:23%;display:none"><span class="v">&#8211;</span> <small>attic</small></div>
+<div class="hpin" id="rm_bed1" style="left:27%;top:45%;display:none"><span class="v">&#8211;</span> <small>bed</small></div>
+<div class="hpin" id="rm_bath" style="left:70%;top:41%;display:none"><span class="v">&#8211;</span> <small>bath</small></div>
+<div class="hpin" id="rm_bed2" style="left:44%;top:45%;display:none"><span class="v">&#8211;</span> <small>bed</small></div>
+<div class="hpin" id="rm_kitchen" style="left:47%;top:65%;display:none"><span class="v">&#8211;</span> <small>kitchen</small></div>
+<div class="hpin" id="rm_living" style="left:27%;top:74%;display:none"><span class="v">&#8211;</span> <small>living</small></div>
+<div class="hpin" id="rm_office" style="left:87%;top:67%;display:none"><span class="v">&#8211;</span> <small>office</small></div>
+</div>
 
 <div class="card"><div class="small" style="margin-bottom:8px">Mode</div>
 <div class="grid">
@@ -126,6 +141,22 @@ input[type=range]{width:100%}label{color:var(--mut);font-size:13px}
 <div id="pairMsg" class="small" style="margin-top:8px">Power-cycle your Orcon, then tap Pair within 3 minutes.</div>
 </div>
 
+<div class="card"><div class="small" style="margin-bottom:8px">Room temperatures (Domoticz IDX)</div>
+<div class="small" style="margin-bottom:8px;color:var(--mut)">Enter the Domoticz IDX of a temperature sensor per room. Each label appears on the airflow house once a value arrives over MQTT; leave 0 to hide a room.</div>
+<div class="metrics">
+<div class="row"><b>Attic</b><input type="number" min="0" id="ri0" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+<div class="row"><b>Bedroom 1</b><input type="number" min="0" id="ri1" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+<div class="row"><b>Bathroom</b><input type="number" min="0" id="ri2" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+<div class="row"><b>Bedroom 2</b><input type="number" min="0" id="ri3" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+<div class="row"><b>Kitchen</b><input type="number" min="0" id="ri4" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+<div class="row"><b>Living</b><input type="number" min="0" id="ri5" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+<div class="row"><b>Office</b><input type="number" min="0" id="ri6" style="width:120px;background:#26303c;color:var(--fg);border:1px solid #313d4c;border-radius:8px;padding:6px"></div>
+</div>
+<button id="riSave" style="width:100%;margin-top:10px">Save room IDs</button>
+<div id="riMsg" class="small" style="margin-top:6px"></div>
+<div id="domdiag" class="small" style="margin-top:6px;color:var(--mut)">&#8211;</div>
+</div>
+
 <div class="card"><div class="small" style="margin-bottom:8px">Settings keeper (survive Orcon power loss)</div>
 <label style="display:flex;align-items:center;gap:8px;color:var(--fg);font-size:14px"><input type="checkbox" id="ar"> Auto-restore after the unit reboots</label>
 <div id="svd" class="small" style="margin-top:8px">No settings saved yet.</div>
@@ -184,6 +215,7 @@ document.querySelectorAll('[data-pair]').forEach(b=>b.onclick=()=>{send({pair:1}
 if($('#pl'))$('#pl').onchange=e=>send({plearn:e.target.checked?1:0});
 if($('#maskids'))$('#maskids').onchange=e=>send({maskids:e.target.checked?1:0}).then(()=>setTimeout(refresh,300));
 if($('#showfilter'))$('#showfilter').onchange=e=>send({showfilter:e.target.checked?1:0}).then(()=>setTimeout(refresh,300));
+if($('#riSave'))$('#riSave').onclick=()=>{var a=[];for(var i=0;i<7;i++){var el=$('#ri'+i);a.push(el&&el.value?+el.value:0);}send({roomidx:a}).then(()=>{if($('#riMsg'))$('#riMsg').textContent='Saved.';setTimeout(refresh,400);});};
 document.querySelector('[data-selftest]').onclick=()=>send({selftest:1});
 document.querySelector('[data-connect]').onclick=()=>send({connect:1});
 document.querySelector('[data-raw]').onclick=()=>send({raw_type:$('#rty').value,raw_code:$('#rco').value.trim(),raw_pl:$('#rpl').value.replace(/\s+/g,'')});
@@ -198,19 +230,13 @@ function refresh(){fetch('/api/state').then(r=>r.json()).then(s=>{
  $('#rh').textContent=num(s.humidity);$('#co2').textContent=num(s.co2);
  if($('#hvOut')){var f=x=>(x==null||x==='')?'–':(Math.round(x*10)/10),
    dur=p=>{p=Math.max(0,Math.min(100,p||0));return p<3?'6s':(2.6-p*0.02).toFixed(2)+'s';};
-   $('#hvOut').textContent=f(s.t_outdoor)+'°';$('#hvIn').textContent=f(s.t_indoor)+'°';
-   $('#hvSup').textContent='supply '+f(s.t_supply)+'° '+num(s.supply)+'%';
-   $('#hvExh').textContent='exhaust '+f(s.t_exhaust)+'° '+num(s.exhaust)+'%';
-   $('#hvRh').textContent='RH '+num(s.humidity)+'%';
-   $('#hvCo2').textContent=s.co2?(s.co2+' ppm'):'– ppm';
-   $('#hvStat').textContent=(s.mode||'–')+' · bypass '+(s.bypass?'open':'closed');
-   var si=$('#hvSupIn'),st=$('#hvSupThru'),sb=$('#hvSupBypass'),ef=$('#hvExhFlow');
-   var sOn=s.supply>2,sd=dur(s.supply);
-   si.style.animationDuration=sd;si.style.opacity=sOn?'1':'.15';
-   st.style.animationDuration=sd;sb.style.animationDuration=sd;
-   st.style.opacity=(sOn&&!s.bypass)?'1':'.12';   // through the core (heat recovery)
-   sb.style.opacity=(sOn&&s.bypass)?'1':'.12';     // around the core (bypass open)
-   ef.style.animationDuration=dur(s.exhaust);ef.style.opacity=s.exhaust>2?'1':'.15';}
+   $('#hvOut').innerHTML=f(s.t_outdoor)+'° <small>outside</small>';
+   $('#hvStat').textContent=(s.mode||'–').toUpperCase()+' · bypass '+(s.bypass?'open':'closed');
+   if($('#fl_sup'))$('#fl_sup').style.animationDuration=dur(s.supply);
+   if($('#fl_exh'))$('#fl_exh').style.animationDuration=dur(s.exhaust);
+   if($('#fl_thru'))$('#fl_thru').style.opacity=s.bypass?'.15':'1';
+   if($('#fl_byp'))$('#fl_byp').style.opacity=s.bypass?'1':'.15';
+   var rm=s.rooms||{};['attic','bed1','bath','bed2','kitchen','living','office'].forEach(function(k){var el=document.getElementById('rm_'+k);if(!el)return;if(rm[k]!=null){el.style.display='';el.querySelector('.v').textContent=f(rm[k])+'°';}else{el.style.display='none';}});}
  $('#byp').textContent=s.bypass?'open':'closed';if($('#byp2'))$('#byp2').textContent=s.bypass?'open':'closed';
   if($('#ar'))$('#ar').checked=!!s.autorestore;
   if($('#svd')&&s.saved){const nm=['Low sup','Low exh','Med sup','Med exh','High sup','High exh','Boost'];
@@ -234,6 +260,8 @@ function refresh(){fetch('/api/state').then(r=>r.json()).then(s=>{
  if($('#pl'))$('#pl').checked=!!s.plearn;
  if($('#maskids'))$('#maskids').checked=!!s.mask_ids;
  if($('#showfilter'))$('#showfilter').checked=!!s.show_filter;
+ if(!window.riInit&&s.room_idx){window.riInit=1;for(var ri=0;ri<7;ri++){var rel=$('#ri'+ri);if(rel)rel.value=s.room_idx[ri]||'';}}
+ if($('#domdiag'))$('#domdiag').textContent='domoticz/out: '+(s.dom_rx||0)+' msgs'+(s.dom_last?(' · last idx '+s.dom_last):'');
  if($('#filtrow'))$('#filtrow').style.display=(s.show_filter===false)?'none':'';
  $('#rssi').textContent=num(s.rssi);$('#radio').textContent=s.radio||'';
  ('cc1101' in s)?($('#cc').textContent=(s.cc1101===0||s.cc1101===255)?('not found ('+s.cc1101+')'):('0x'+s.cc1101.toString(16)+' OK')):($('#cc').textContent='n/a');
@@ -280,6 +308,7 @@ button{cursor:pointer;margin-top:14px}button.go{background:var(--acc);border-col
 <div class="card">
 <label>MQTT broker host (optional)</label>
 <input id="mqtt" placeholder="e.g. 192.168.1.10  (blank = keep current)">
+<div id="curcfg" class="small" style="margin-top:6px"></div>
 </div>
 <button class="go" id="save">Save &amp; reboot</button>
 <div id="msg" class="small"></div>
@@ -288,6 +317,7 @@ button{cursor:pointer;margin-top:14px}button.go{background:var(--acc);border-col
 <script>
 const $=s=>document.querySelector(s);
 $('#show').onchange=e=>$('#pass').type=e.target.checked?'text':'password';
+fetch('/api/netcfg').then(r=>r.json()).then(c=>{if(c.mqtt)$('#mqtt').value=c.mqtt;if($('#curcfg'))$('#curcfg').textContent='Current: WiFi “'+(c.ssid||'—')+'”, MQTT '+(c.mqtt||'not set');}).catch(()=>{});
 function scan(){
  $('#rescan').textContent='…';
  fetch('/api/scan').then(r=>r.json()).then(list=>{
@@ -618,112 +648,131 @@ static const char FLOW_HTML[] PROGMEM = R"FLOW(<!doctype html>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Orcon airflow</title>
 <style>
-:root{--fg:#e7edf3;--mut:#8b97a7;--acc:#3da9fc}
+:root{--fg:#e7edf3;--mut:#8b97a7;--acc:#3da9fc;--exh:#e9885a}
 *{box-sizing:border-box}html,body{margin:0;background:transparent}
 body{font:14px system-ui,sans-serif;color:var(--fg);padding:6px}
-.hvflow{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:0.5 13;animation:hvm 2s linear infinite}
-@keyframes hvm{to{stroke-dashoffset:-27}}
-.btns{display:flex;gap:4px;margin-top:6px}
-.btns button{flex:1;font:600 11px system-ui;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:8px;padding:8px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-.ic{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.btns button:active{transform:scale(.96)}
-.btns button.sel{background:var(--acc);border-color:var(--acc);color:#04121f}
-.ov{position:fixed;inset:0;background:rgba(6,10,15,.72);display:none;align-items:center;justify-content:center;padding:14px;z-index:9}
-.ov.on{display:flex}
-.pop{background:#161e27;border:1px solid #313d4c;border-radius:14px;padding:16px;width:100%;max-width:300px}
-.pop h3{margin:0 0 12px;font:600 14px system-ui}
-.pop .x{float:right;color:var(--mut);cursor:pointer;font-size:18px;line-height:1}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.pop button{font:600 13px system-ui;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:9px;padding:11px 6px;cursor:pointer}
-.pop .go{background:var(--acc);border-color:var(--acc);color:#04121f;width:100%;margin-top:12px}
-.pop label{display:block;color:var(--mut);font-size:12px;margin:10px 0 4px}
-.pop input[type=range]{width:100%}
+.widget{display:flex;gap:12px;width:100%;max-width:1100px;align-items:stretch;background:transparent}
+.left{position:relative;flex:1;min-width:0}
+.left>img{width:100%;display:block;border-radius:12px}
+.title{position:absolute;left:10px;top:9px;background:rgba(10,14,20,.74);color:#fff;font:600 12px system-ui;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.16)}
+.info{position:absolute;right:9px;top:9px;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.ip{background:rgba(10,14,20,.74);color:#fff;font:600 12px system-ui;padding:3px 10px;border-radius:20px;white-space:nowrap;border:1px solid rgba(255,255,255,.16)}
+.ip.mode{background:rgba(61,169,252,.92);color:#04121f;border-color:transparent}
+.ip small{font-weight:400;opacity:.72;font-size:10px}
+.pin{position:absolute;transform:translate(-50%,-50%);background:rgba(10,14,20,.74);color:#fff;font:600 12px system-ui;padding:2px 8px;border-radius:20px;white-space:nowrap;border:1px solid rgba(255,255,255,.16)}
+.pin small{font-weight:400;opacity:.75;font-size:10px}.out{color:#9fd0ff}
+.jn{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);border:1.5px solid #0e1218;box-shadow:0 0 3px rgba(0,0,0,.9);z-index:5}
+.jn.s{background:var(--acc)}.jn.e{background:var(--exh)}
+.hvflow{fill:none;stroke-width:3.4;stroke-linecap:round;stroke-dasharray:0.5 6;animation:hvm 1.6s linear infinite;filter:drop-shadow(0 0 2.5px rgba(0,0,0,.95))}
+@keyframes hvm{to{stroke-dashoffset:-13}}
+.duct{fill:none;stroke:rgba(255,255,255,.35);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 2px rgba(0,0,0,.8))}
+.ov{position:absolute;inset:0;width:100%;height:100%}
+.ctrl{width:190px;display:flex;flex-direction:column;justify-content:space-between}
+.sec{display:flex;flex-direction:column}
+.clbl{font:600 10px system-ui;color:var(--mut);margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.g3 button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:56px;font:600 12px system-ui;color:var(--fg);background:#26303c;border:1px solid #313d4c;border-radius:9px;cursor:pointer}
+.g3 button:active{transform:scale(.96)}.g3 button.on{background:var(--acc);border-color:var(--acc);color:#04121f}
+.bic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stepc{display:flex;align-items:center;gap:6px;background:#1a212b;border:1px solid #313d4c;border-radius:9px;padding:7px 9px;font:600 12px system-ui}
+.sup{color:#7cc4ff}.exhc{color:#f0a877}.stepc b{margin-left:auto;min-width:26px;text-align:right}
+.ctl{background:rgba(255,255,255,.16);border:none;color:#fff;width:24px;height:24px;border-radius:7px;font:700 13px system-ui;cursor:pointer;line-height:1;padding:0}
+.ctl:hover{background:rgba(255,255,255,.3)}.ctl:active{transform:scale(.9)}
 </style></head><body>
-<svg viewBox="0 0 360 250" style="width:100%;display:block">
-<defs><marker id="hvarr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-<rect x="1" y="1" width="358" height="248" rx="11" fill="#0e1218"/>
-<text x="14" y="22" fill="var(--fg)" style="font:600 13px system-ui">House airflow</text>
-<text id="hvStat" x="346" y="22" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">&#8211;</text>
-<line x1="14" y1="226" x2="346" y2="226" stroke="#2a3340" stroke-width="2" stroke-linecap="round"/>
-<path d="M150,106 L250,60 L350,106 Z" fill="#1c2530" stroke="#44535f" stroke-width="1.5"/>
-<rect x="150" y="106" width="200" height="120" rx="3" fill="#161e27" stroke="#44535f" stroke-width="1.5"/>
-<rect id="hvBox" x="232" y="150" width="58" height="60" rx="6" fill="#26303c" stroke="#44535f" stroke-width="1.5"/>
-<line x1="238" y1="156" x2="284" y2="204" stroke="var(--acc)" stroke-width="1.5" opacity="0.45"/>
-<line x1="284" y1="156" x2="238" y2="204" stroke="#e9885a" stroke-width="1.5" opacity="0.45"/>
-<text x="261" y="224" text-anchor="middle" fill="var(--mut)" style="font:10px system-ui">heat exch.</text>
-<text x="22" y="52" fill="var(--mut)" style="font:11px system-ui">outside</text>
-<text id="hvOut" x="20" y="84" fill="#9fd0ff" style="font:500 22px system-ui">&#8211;</text>
-<line x1="14" y1="196" x2="322" y2="196" stroke="#222b35" stroke-width="6" stroke-linecap="round"/>
-<path id="hvExhFlow" class="hvflow" d="M322,196 L14,196" stroke="#e9885a" marker-end="url(#hvarr)"/>
-<text id="hvExh" x="58" y="188" fill="#e9885a" style="font:11px system-ui">exhaust</text>
-<line x1="14" y1="168" x2="196" y2="168" stroke="#222b35" stroke-width="6" stroke-linecap="round"/>
-<line x1="196" y1="168" x2="332" y2="168" stroke="#222b35" stroke-width="6" stroke-linecap="round" opacity="0.3"/>
-<path d="M196,168 L196,118 L305,118 L305,168" fill="none" stroke="#222b35" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
-<path id="hvSupIn" class="hvflow" d="M14,168 L196,168" stroke="var(--acc)"/>
-<path id="hvSupThru" class="hvflow" d="M196,168 L332,168" stroke="var(--acc)" marker-end="url(#hvarr)"/>
-<path id="hvSupBypass" class="hvflow" d="M196,168 L196,118 L305,118 L305,168" stroke="var(--acc)" marker-end="url(#hvarr)"/>
-<text id="hvSup" x="58" y="160" fill="var(--acc)" style="font:11px system-ui">supply</text>
-<text id="hvIn" x="348" y="132" text-anchor="end" fill="var(--fg)" style="font:500 22px system-ui">&#8211;</text>
-<text x="348" y="148" text-anchor="end" fill="var(--mut)" style="font:10px system-ui">inside</text>
-<text id="hvRh" x="348" y="202" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">RH &#8211;%</text>
-<text id="hvCo2" x="348" y="218" text-anchor="end" fill="var(--mut)" style="font:11px system-ui">&#8211; ppm</text>
-</svg>
-<div class="btns">
-<button data-m="away"><svg class="ic" viewBox="0 0 24 24"><path d="M4 12l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Away</button>
-<button data-pop="byp"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/></svg>Bypass</button>
-<button data-m="low"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>1</button>
-<button data-m="medium"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>2</button>
-<button data-m="high"><svg class="ic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>3</button>
-<button data-m="boost"><svg class="ic" viewBox="0 0 24 24"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg>Boost</button>
-<button data-pop="cust"><svg class="ic" viewBox="0 0 24 24"><path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="2"/><circle cx="9" cy="16" r="2"/></svg>AC</button>
+<div class="widget">
+<div class="left">
+<img src="house.jpg" alt="house">
+<div class="title">&#127968; Orcon HRC</div>
+<div class="info">
+<div class="ip mode" id="w_mode">&#8211;</div>
+<div class="ip" id="w_byp">bypass &#8211;</div>
+<div class="ip" id="w_rh">Moist &#8211;%</div>
+<div class="ip" id="w_co2">CO&#8322; &#8211;</div>
+<div class="ip" id="w_flt">filter &#8211;%</div>
 </div>
-<div class="ov" id="ovByp"><div class="pop">
-<span class="x" data-close>&times;</span><h3>Bypass</h3>
-<div class="row3">
-<button data-byp="open">Open</button><button data-byp="auto">Auto</button><button data-byp="close">Dicht</button>
-</div></div></div>
-<div class="ov" id="ovCust"><div class="pop">
-<span class="x" data-close>&times;</span><h3>AC-koeling (onbalans)</h3>
-<label>Toevoer (supply): <span id="csv">20</span>%</label>
-<input id="cs" type="range" min="0" max="100" step="5" value="20">
-<label>Afvoer (exhaust): <span id="cev">40</span>%</label>
-<input id="ce" type="range" min="0" max="100" step="5" value="40">
-<label style="display:flex;align-items:center;gap:8px;margin-top:8px"><input type="checkbox" id="cb" checked style="width:auto"> Bypass open (buitenlucht)</label>
-<button class="go" data-apply>Toepassen</button>
+<svg class="ov" viewBox="0 0 100 100" preserveAspectRatio="none">
+<defs><marker id="arU" viewBox="0 0 10 10" refX="5" refY="4" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 8L5 2L9 8" fill="none" stroke="context-stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arD" viewBox="0 0 10 10" refX="5" refY="6" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 2L5 8L9 2" fill="none" stroke="context-stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<path class="duct" d="M37,33 L37,82"/><path class="duct" d="M44,82 L44,15"/>
+<path class="duct" d="M37,50 L27,50"/><path class="duct" d="M37,50 L46,50"/><path class="duct" d="M37,79 L26,79"/><path class="duct" d="M40,28 L58,28"/>
+<path class="duct" d="M44,70 L49,70"/><path class="duct" d="M44,46 L67,46"/><path class="duct" d="M44,78 L61,78"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,50 L27,50"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,50 L46,50"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,79 L26,79"/>
+<path class="hvflow" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M40,28 L58,28"/>
+<path class="hvflow" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,70 L49,70"/>
+<path class="hvflow" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,46 L67,46"/>
+<path class="hvflow" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,78 L61,78"/>
+<path class="hvflow" id="fl_sup" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,33 L37,82" marker-end="url(#arD)"/>
+<path class="hvflow" id="fl_thru" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,20 L37,33" style="opacity:.15"/>
+<path class="hvflow" id="fl_byp" stroke="#3da9fc" vector-effect="non-scaling-stroke" d="M37,20 L45,26 L37,33"/>
+<path class="hvflow" id="fl_exh" stroke="#e9885a" vector-effect="non-scaling-stroke" d="M44,82 L44,15" marker-end="url(#arU)"/>
+</svg>
+<div class="jn s" style="left:27%;top:50%"></div>
+<div class="jn s" style="left:46%;top:50%"></div>
+<div class="jn s" style="left:26%;top:79%"></div>
+<div class="jn s" style="left:58%;top:28%"></div>
+<div class="jn e" style="left:49%;top:70%"></div>
+<div class="jn e" style="left:67%;top:46%"></div>
+<div class="jn e" style="left:61%;top:78%"></div>
+<div class="pin out" id="t_out" style="left:8%;top:16%">&#8211;</div>
+<div class="pin" id="rm_attic" style="left:58%;top:23%;display:none"><span class="v">&#8211;</span> <small>attic</small></div>
+<div class="pin" id="rm_bed1" style="left:27%;top:45%;display:none"><span class="v">&#8211;</span> <small>bed</small></div>
+<div class="pin" id="rm_bath" style="left:70%;top:41%;display:none"><span class="v">&#8211;</span> <small>bath</small></div>
+<div class="pin" id="rm_bed2" style="left:44%;top:45%;display:none"><span class="v">&#8211;</span> <small>bed</small></div>
+<div class="pin" id="rm_kitchen" style="left:47%;top:65%;display:none"><span class="v">&#8211;</span> <small>kitchen</small></div>
+<div class="pin" id="rm_living" style="left:27%;top:74%;display:none"><span class="v">&#8211;</span> <small>living</small></div>
+<div class="pin" id="rm_office" style="left:87%;top:67%;display:none"><span class="v">&#8211;</span> <small>office</small></div>
+</div>
+<div class="ctrl">
+<div class="sec"><div class="clbl">Mode</div>
+<div class="g3">
+<button data-m="away"><svg class="bic" viewBox="0 0 24 24"><path d="M4 12l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Away</button><button data-m="auto"><svg class="bic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 15l2.7-6 2.7 6"/><path d="M10.1 13.2h3.8"/></svg>Auto</button><button data-m="low"><svg class="bic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>1</button>
+<button data-m="medium"><svg class="bic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>2</button><button data-m="high"><svg class="bic" viewBox="0 0 24 24"><path d="M3 8h10a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 16h7"/></svg>3</button><button data-m="boost"><svg class="bic" viewBox="0 0 24 24"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg>Boost</button>
 </div></div>
+<div class="sec"><div class="clbl">Bypass</div>
+<div class="g3">
+<button data-b="open"><svg class="bic" viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17"/></svg>Open</button><button data-b="auto"><svg class="bic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 15l2.7-6 2.7 6"/><path d="M10.1 13.2h3.8"/></svg>Auto</button><button data-b="close"><svg class="bic" viewBox="0 0 24 24"><path d="M12 3c2.5 3.5 4 5.5 4 8a4 4 0 0 1-8 0c0-1.6.8-2.8 1.6-3.6.8 1.4 1.7 1.6 2.4.4z"/></svg>Close</button>
+</div></div>
+<div class="sec"><div class="clbl">Balance</div>
+<div class="stepc"><span class="sup">supply</span><button class="ctl" data-w="s" data-step="-5">&#9662;</button><b id="supv">&#8211;</b>%<button class="ctl" data-w="s" data-step="5">&#9652;</button></div>
+<div class="stepc" style="margin-top:5px"><span class="exhc">exhaust</span><button class="ctl" data-w="e" data-step="-5">&#9662;</button><b id="exhv">&#8211;</b>%<button class="ctl" data-w="e" data-step="5">&#9652;</button></div></div>
+<div class="sec"><div class="clbl">Boost</div>
+<div class="g3">
+<button data-t="15"><svg class="bic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>15m</button><button data-t="30"><svg class="bic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>30m</button><button data-t="60"><svg class="bic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>60m</button>
+</div></div>
+</div>
+</div>
 <script>
 const $=s=>document.querySelector(s);
 const num=x=>(x==null||x===undefined)?'–':x;
+const f=x=>(x==null||x==='')?'–':(Math.round(x*10)/10);
+const dur=p=>{p=Math.max(0,Math.min(100,p||0));return p<3?'6s':(2.6-p*0.02).toFixed(2)+'s';};
 function send(b){return fetch('/api/cmd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})}
-function mark(m){document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('sel',x.dataset.m===m));}
-document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mark(b.dataset.m);send({mode:b.dataset.m}).then(()=>setTimeout(up,400));});
-document.querySelectorAll('[data-pop]').forEach(b=>b.onclick=()=>{(b.dataset.pop==='byp'?$('#ovByp'):$('#ovCust')).classList.add('on');});
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.ov').classList.remove('on'));
-document.querySelectorAll('.ov').forEach(o=>o.onclick=e=>{if(e.target===o)o.classList.remove('on');});
-document.querySelectorAll('[data-byp]').forEach(b=>b.onclick=()=>{send({bypass:b.dataset.byp});$('#ovByp').classList.remove('on');setTimeout(up,600);});
-$('#cs').oninput=e=>$('#csv').textContent=e.target.value;
-$('#ce').oninput=e=>$('#cev').textContent=e.target.value;
-document.querySelector('[data-apply]').onclick=()=>{mark('high');send({ac_sup:+$('#cs').value,ac_exh:+$('#ce').value,ac_byp:$('#cb').checked?1:0});$('#ovCust').classList.remove('on');setTimeout(up,600);};
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-m]').forEach(x=>x.classList.remove('on'));b.classList.add('on');send({mode:b.dataset.m}).then(()=>setTimeout(up,500));});
+document.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>send({bypass:b.dataset.b}).then(()=>setTimeout(up,500)));
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>send({timer:+b.dataset.t}));
+var acS=50,acE=50,acT=null,curByp=0;
+function stepAc(w,d){if(w=='s'){acS=Math.max(0,Math.min(100,acS+d));$('#supv').textContent=acS;}else{acE=Math.max(0,Math.min(100,acE+d));$('#exhv').textContent=acE;}clearTimeout(acT);acT=setTimeout(function(){send({ac_sup:acS,ac_exh:acE,ac_byp:curByp});acT=null;},800);}
+document.querySelectorAll('.ctl').forEach(b=>b.onclick=()=>stepAc(b.dataset.w,+b.dataset.step));
+const ROOMS=['attic','bed1','bath','bed2','kitchen','living','office'];
 function up(){fetch('/api/state').then(r=>r.json()).then(s=>{
-  const f=x=>(x==null||x==='')?'–':(Math.round(x*10)/10),
-   dur=p=>{p=Math.max(0,Math.min(100,p||0));return p<3?'6s':(2.6-p*0.02).toFixed(2)+'s';};
-  $('#hvOut').textContent=f(s.t_outdoor)+'°';$('#hvIn').textContent=f(s.t_indoor)+'°';
-  $('#hvSup').textContent='supply '+f(s.t_supply)+'° '+num(s.supply)+'%';
-  $('#hvExh').textContent='exhaust '+f(s.t_exhaust)+'° '+num(s.exhaust)+'%';
-  $('#hvRh').textContent='RH '+num(s.humidity)+'%';
-  $('#hvCo2').textContent=s.co2?(s.co2+' ppm'):'– ppm';
-  $('#hvStat').textContent=(s.mode||'–')+' · bypass '+(s.bypass?'open':'closed');
-  mark((s.cmd_mode&&s.cmd_mode!=='unknown')?s.cmd_mode:s.mode);
-  if(!window.ci&&s.saved){window.ci=1;
-    if(s.saved[4]>=0){$('#cs').value=s.saved[4];$('#csv').textContent=s.saved[4];}
-    if(s.saved[5]>=0){$('#ce').value=s.saved[5];$('#cev').textContent=s.saved[5];}}
-  const si=$('#hvSupIn'),st=$('#hvSupThru'),sb=$('#hvSupBypass'),ef=$('#hvExhFlow');
-  const sOn=s.supply>2,sd=dur(s.supply);
-  si.style.animationDuration=sd;si.style.opacity=sOn?'1':'.15';
-  st.style.animationDuration=sd;sb.style.animationDuration=sd;
-  st.style.opacity=(sOn&&!s.bypass)?'1':'.12';   // through the core (heat recovery)
-  sb.style.opacity=(sOn&&s.bypass)?'1':'.12';     // around the core (bypass open)
-  ef.style.animationDuration=dur(s.exhaust);ef.style.opacity=s.exhaust>2?'1':'.15';
+ curByp=s.bypass?1:0;
+ $('#w_mode').textContent=(s.mode||'–').toUpperCase();
+ $('#w_byp').innerHTML='bypass <b>'+(s.bypass?'open':'closed')+'</b>';
+ $('#w_rh').innerHTML='Moist <b>'+num(s.humidity)+'%</b>';
+ $('#w_co2').innerHTML='CO₂ <b>'+num(s.co2)+'</b> <small>ppm</small>';
+ $('#w_flt').innerHTML='filter <b>'+(s.filter===255?'–':num(s.filter))+'%</b>';
+ $('#t_out').innerHTML=f(s.t_outdoor)+'° <small>outside</small>';
+ if(acT===null){acS=+s.supply||0;acE=+s.exhaust||0;$('#supv').textContent=num(s.supply);$('#exhv').textContent=num(s.exhaust);}
+ var m=(s.cmd_mode&&s.cmd_mode!='unknown')?s.cmd_mode:s.mode;
+ document.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+ var rm=s.rooms||{};
+ ROOMS.forEach(function(k){var el=document.getElementById('rm_'+k);if(!el)return;if(rm[k]!=null){el.style.display='';el.querySelector('.v').textContent=f(rm[k])+'°';}else{el.style.display='none';}});
+ if($('#fl_sup'))$('#fl_sup').style.animationDuration=dur(s.supply);
+ if($('#fl_exh'))$('#fl_exh').style.animationDuration=dur(s.exhaust);
+ if($('#fl_thru'))$('#fl_thru').style.opacity=s.bypass?'.15':'1';
+ if($('#fl_byp'))$('#fl_byp').style.opacity=s.bypass?'1':'.15';
 });}
 up();setInterval(up,4000);
 </script></body></html>)FLOW";

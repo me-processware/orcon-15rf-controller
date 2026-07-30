@@ -9,6 +9,7 @@
 #include "cc1101_tx.h"
 #endif
 #include "web_page.h"
+#include "house_img.h"
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -45,6 +46,15 @@ static String   g_ssid, g_pass, g_mqttHost;
 static bool     g_maskIds   = true;   // mask device IDs in the UI (privacy, default on)
 static bool     g_showFilter = true;  // show the filter row (some units never report it)
 
+// Room temperatures for the airflow house: one Domoticz IDX per room, filled
+// live from the broker's "domoticz/out" feed. Order matches the widget's pins.
+static const char* const ROOM_KEYS[7] = {"attic","bed1","bath","bed2","kitchen","living","office"};
+static uint32_t g_roomIdx[7]  = {0,0,0,0,0,0,0};   // 0 = unmapped
+static float    g_roomTemp[7] = {0,0,0,0,0,0,0};
+static uint32_t g_roomTs[7]   = {0,0,0,0,0,0,0};   // 0 = never received
+static uint32_t g_domRx = 0;       // diag: number of domoticz/out messages seen
+static uint32_t g_domLastIdx = 0;  // diag: last IDX seen on domoticz/out
+
 // ---------------------------------------------------------------------------
 // Persistent config (NVS): WiFi, MQTT host, device IDs
 // ---------------------------------------------------------------------------
@@ -66,6 +76,7 @@ static void loadConfig() {
     bool     pl = prefs.getBool("pl", false);
     g_maskIds    = prefs.getBool("mask", true);
     g_showFilter = prefs.getBool("fltr", true);
+    for (int i = 0; i < 7; i++) { char rk[4]; snprintf(rk, sizeof(rk), "r%d", i); g_roomIdx[i] = prefs.getUInt(rk, 0); }
     prefs.end();
     bool freshId = (us == 0);
     if (freshId) {                               // first boot: a unique serial from the chip ID
@@ -161,6 +172,14 @@ static void buildStateJson(char* out, size_t cap) {
     JsonArray sv = d["saved"].to<JsonArray>();
     for (int i = 0; i < 7; i++) sv.add(orcon::fanSaved(i));
     d["byp_saved"] = orcon::bypassSaved();
+    JsonObject rooms = d["rooms"].to<JsonObject>();        // live room temps (Domoticz IDX)
+    for (int i = 0; i < 7; i++)
+        if (g_roomIdx[i] && g_roomTs[i] && (millis() - g_roomTs[i]) < 3600000UL)
+            rooms[ROOM_KEYS[i]] = g_roomTemp[i];
+    JsonArray ridx = d["room_idx"].to<JsonArray>();         // configured IDX (for the settings form)
+    for (int i = 0; i < 7; i++) ridx.add(g_roomIdx[i]);
+    d["dom_rx"]   = g_domRx;                                 // diag: domoticz/out message count
+    d["dom_last"] = g_domLastIdx;
 #if defined(USE_CC1101_TX) || defined(RADIO_CC1101_ASYNC)
     d["cc1101"]    = cc1101tx::version();
     d["urx"]       = cc1101tx::uartBytes();   // bytes seen on the GDO2 RX line (diag)
@@ -190,6 +209,15 @@ static void applyCommand(JsonDocument& d) {
     if (!d["showfilter"].isNull()) {                        // show/hide the filter row
         g_showFilter = (int)(d["showfilter"] | 0) != 0;
         prefs.begin("orcon", false); prefs.putBool("fltr", g_showFilter); prefs.end();
+    }
+    if (!d["roomidx"].isNull()) {                          // Domoticz IDX per airflow room
+        JsonArray a = d["roomidx"].as<JsonArray>();
+        prefs.begin("orcon", false);
+        for (int i = 0; i < 7; i++) {
+            if (i < (int)a.size()) g_roomIdx[i] = (uint32_t)(a[i] | 0);
+            char rk[4]; snprintf(rk, sizeof(rk), "r%d", i); prefs.putUInt(rk, g_roomIdx[i]);
+        }
+        prefs.end();
     }
     if (!d["selftest"].isNull()) orcon::setSelftest((int)(d["selftest"] | 0) != 0);
     if (!d["connect"].isNull())  orcon::sendConnect();
@@ -242,6 +270,10 @@ static void handleWifi()  { server.send_P(200, "text/html", SETUP_HTML); }
 static void handleLogPg() { server.send_P(200, "text/html", LOG_HTML);  }
 static void handleWidget() { server.send_P(200, "text/html", WIDGET_HTML); }
 static void handleFlow()   { server.send_P(200, "text/html", FLOW_HTML);   }
+static void handleHouseImg() {
+    server.sendHeader("Cache-Control", "max-age=86400");
+    server.send_P(200, "image/webp", (PGM_P)HOUSE_JPG, HOUSE_JPG_LEN);
+}
 static void handleDebug()  { server.send_P(200, "text/html", DEBUG_HTML);  }
 static void handleUpdatePage() { server.send_P(200, "text/html", UPDATE_HTML); }
 static void handleUpdateUpload() {
@@ -263,6 +295,13 @@ static void handleUpdateDone() {
 
 static void handleState() {
     char buf[1400]; buildStateJson(buf, sizeof(buf));
+    server.send(200, "application/json", buf);
+}
+static void handleNetCfg() {   // current WiFi SSID + MQTT host, to prefill the setup page
+    JsonDocument d;
+    d["ssid"] = g_ssid;
+    d["mqtt"] = g_mqttHost;
+    char buf[192]; serializeJson(d, buf, sizeof(buf));
     server.send(200, "application/json", buf);
 }
 static void handleCmd() {
@@ -340,9 +379,40 @@ static void handleWifiSave() {
 // ---------------------------------------------------------------------------
 // MQTT
 // ---------------------------------------------------------------------------
+// Cheap IDX scan so the high-volume domoticz/out feed doesn't get a full JSON
+// parse per message (that starves the timing-sensitive RAMSES RX).
+static uint32_t quickIdx(const byte* p, unsigned int len) {
+    for (unsigned int i = 0; i + 4 < len; i++) {
+        if (p[i]=='i' && p[i+1]=='d' && p[i+2]=='x') {
+            unsigned int j = i + 3;
+            while (j < len && (p[j]==' '||p[j]=='"'||p[j]==':')) j++;
+            uint32_t v = 0; bool any = false;
+            while (j < len && p[j]>='0' && p[j]<='9') { v = v*10 + (p[j]-'0'); j++; any = true; }
+            if (any) return v;
+        }
+    }
+    return 0;
+}
 static void mqttCallback(char* topic, byte* payload, unsigned int len) {
-    (void)topic;
-    JsonDocument d;
+    if (topic && !strcmp(topic, "domoticz/out")) {         // high-volume feed: filter cheaply first
+        g_domRx++;
+        uint32_t idx = quickIdx(payload, len);
+        if (!idx) return;
+        g_domLastIdx = idx;
+        int slot = -1;
+        for (int i = 0; i < 7; i++) if (g_roomIdx[i] == idx) { slot = i; break; }
+        if (slot < 0) return;                              // not one of our rooms -> skip the parse
+        JsonDocument d;
+        if (deserializeJson(d, payload, len)) return;
+        // temp is in "Temp" (weather stations) or "svalue1" (plain Temp / Temp+Hum); "svalue" last
+        float t;
+        if      (!d["Temp"].isNull())    t = d["Temp"].as<float>();
+        else if (!d["svalue1"].isNull()) t = (float)atof(d["svalue1"] | "0");
+        else                             t = (float)atof(d["svalue"]  | "0");
+        g_roomTemp[slot] = t; g_roomTs[slot] = millis();
+        return;
+    }
+    JsonDocument d;                                        // command topic (small, low volume)
     if (deserializeJson(d, payload, len)) return;
     applyCommand(d);
 }
@@ -433,7 +503,7 @@ static void mqttReconnect() {
     bool ok = strlen(MQTT_USER)
         ? mqtt.connect(cid.c_str(), MQTT_USER, MQTT_PASS)
         : mqtt.connect(cid.c_str());
-    if (ok) { mqtt.subscribe(MQTT_BASE_TOPIC "/cmd"); publishDiscovery(); g_dirty = true; backoff = 5000; }
+    if (ok) { mqtt.subscribe(MQTT_BASE_TOPIC "/cmd"); mqtt.subscribe("domoticz/out"); publishDiscovery(); g_dirty = true; backoff = 5000; }
     else    { backoff = backoff < 300000 ? backoff * 2 : 300000; }
 #endif
 }
@@ -511,10 +581,12 @@ void begin() {
     server.on("/widget",    handleWidget);
     server.on("/widget.html", handleFlow);
     server.on("/flow",      handleFlow);
+    server.on("/house.jpg", handleHouseImg);
     server.on("/debug",     handleDebug);
     server.on("/update",    HTTP_GET,  handleUpdatePage);
     server.on("/update",    HTTP_POST, handleUpdateDone, handleUpdateUpload);
     server.on("/api/state", handleState);
+    server.on("/api/netcfg", handleNetCfg);
     server.on("/api/cmd",   HTTP_POST, handleCmd);
     server.on("/api/log",   handleLog);
     server.on("/api/ids",   HTTP_POST, handleIds);
@@ -525,7 +597,7 @@ void begin() {
 #if MQTT_ENABLED
     mqtt.setServer(g_mqttHost.c_str(), MQTT_PORT);
     mqtt.setCallback(mqttCallback);
-    mqtt.setBufferSize(768);   // room for the discovery config payloads
+    mqtt.setBufferSize(1536);  // room for the full state JSON out + domoticz/out msgs in
     mqtt.setSocketTimeout(2);     // cap a blocking connect() at 2s (don't starve RX)
 #endif
     oledDraw();
@@ -547,7 +619,7 @@ bool        mqttConnected() {
 }
 
 void publishState() {
-    char buf[760]; buildStateJson(buf, sizeof(buf));
+    char buf[1400]; buildStateJson(buf, sizeof(buf));
 #if MQTT_ENABLED
     if (mqtt.connected()) mqtt.publish(MQTT_BASE_TOPIC "/state", buf, true);
 #endif
