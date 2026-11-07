@@ -50,7 +50,7 @@ and decode in software (the evofw3 method). **Not every LoRa chip can do this:**
 | Radio | Works? | Notes |
 |-------|--------|-------|
 | **CC1101** | ✅ **Recommended** | The community standard. RX **and** TX via async serial. ~€2 external module. |
-| **SX1276 / SX1279** (SX127x) | ✅ | Has direct/continuous mode → same trick on the *on-board* radio (e.g. Heltec WiFi LoRa 32 **V2**). SX1278 is 433 MHz — not 868. |
+| **SX1276 / SX1279** (SX127x) | ✅ | Has direct/continuous mode → same trick on the *on-board* radio (e.g. Heltec WiFi LoRa 32 **V2**, LilyGo T3 **v1.6.1**). SX1278 is 433 MHz — not 868. |
 | SX1262 / SX1268 (SX126x) | ❌ | No transparent mode. Packet engine can't frame RAMSES. Kept only as an experiment. |
 | SX1302/1303 | ❌ | LoRaWAN gateway concentrators, wrong class of chip. |
 
@@ -103,6 +103,7 @@ Defined in `platformio.ini`:
 |-----|-------|-------|
 | `heltec_v3_cc1101_ota` *(default)* | Heltec WiFi LoRa 32 V3/V4 (ESP32-S3) | external CC1101, RX+TX |
 | `heltec_v2_sx1276` | Heltec WiFi LoRa 32 **V2** (ESP32) | on-board SX1276, RX+TX |
+| `lilygo_t3_v161_sx1276` | LilyGo T3 LoRa32 **v1.6.1** (ESP32-PICO-D4, 4 MB) — 868 MHz variant only | on-board SX1276, RX+TX |
 | `esp32-480480s040` | Guition ESP32-4848S040 (480×480 touch) | CC1101 on shared SPI |
 | `heltec_v3_1262_ota` | Heltec V3/V4 | on-board SX1262 (experimental) |
 | `native` | host | unit tests (no hardware) |
