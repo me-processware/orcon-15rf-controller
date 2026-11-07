@@ -31,6 +31,9 @@ static PubSubClient mqtt(wifiClient);
 static Preferences  prefs;
 
 #if !defined(NO_OLED)
+#if !defined(PIN_OLED_RST)
+#define PIN_OLED_RST U8X8_PIN_NONE
+#endif
 static U8G2_SSD1306_128X64_NONAME_F_HW_I2C
     oled(U8G2_R0, PIN_OLED_RST, PIN_OLED_SCL, PIN_OLED_SDA);
 #endif
@@ -516,16 +519,17 @@ static void oledInit() {}
 static void oledDraw() {}
 #else
 static void oledInit() {
+#if defined(PIN_VEXT)
     pinMode(PIN_VEXT, OUTPUT); digitalWrite(PIN_VEXT, LOW);
-    pinMode(PIN_OLED_RST, OUTPUT);
-    digitalWrite(PIN_OLED_RST, LOW); delay(20); digitalWrite(PIN_OLED_RST, HIGH);
+#endif
     oled.begin();
     oled.setFont(u8g2_font_6x12_tf);
 }
 static void oledDraw() {
     const orcon::State& s = orcon::state();
     char l1[24], l2[24], l3[24], l4[24];
-    snprintf(l1, sizeof(l1), "Orcon 15RF  %s", radio::name());
+    const char* chip = radio::name();
+    snprintf(l1, sizeof(l1), "Orcon 15RF  %.*s", (int)strcspn(chip, " "), chip);
     if (s.selftest)
         snprintf(l2, sizeof(l2), "TST cmd:%s fan:%s",
                  orcon::modeName(s.cmdMode), orcon::modeName(s.mode));
@@ -533,11 +537,16 @@ static void oledDraw() {
         snprintf(l2, sizeof(l2), "Mode: %s", orcon::modeName(s.mode));
     int fage = s.lastFanMs ? (int)((millis() - s.lastFanMs) / 1000) : -1;
     snprintf(l3, sizeof(l3), "fan %ds  CO2 %u", fage, s.co2);
-    snprintf(l4, sizeof(l4), g_apMode ? "AP %s" : "%s", g_ip);
+    if (g_apMode)
+        snprintf(l4, sizeof(l4), "AP %s", g_ip);
+    else if (WiFi.status() != WL_CONNECTED)
+        snprintf(l4, sizeof(l4), "WiFi connecting...");
+    else
+        snprintf(l4, sizeof(l4), "%s mq:%s", g_ip, mqttConnected() ? "ok" : "--");
     oled.clearBuffer();
     oled.drawStr(0, 11, l1); oled.drawStr(0, 26, l2);
     oled.drawStr(0, 41, l3); oled.drawStr(0, 56, l4);
-    if (s.fault) oled.drawStr(104, 11, "!");
+    if (s.fault) oled.drawStr(122, 11, "!");
     oled.sendBuffer();
 }
 #endif
