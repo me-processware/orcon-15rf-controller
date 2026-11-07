@@ -225,18 +225,9 @@ bool begin() {
 }
 
 bool sendFrame(const ramses::Frame& f) {
-    size_t bits = 0;
-    size_t n = ramses::encodeFrame(f, g_onair, sizeof(g_onair), RF_PREAMBLE_BYTES, &bits);
-    if (!n) return false;
-    static uint8_t txSync[2] = { 0x55, 0x53 };
-    g_radio.standby();                        // leave continuous/direct RX cleanly
-    g_radio.setEncoding(RADIOLIB_ENCODING_NRZ);
-    g_radio.setSyncWord(txSync, sizeof(txSync));
-    g_radio.fixedPacketLengthMode((uint8_t)n);
-    int st = g_radio.transmit(g_onair, n);
-    startReceive();                           // straight back to listening
-    if (st != RADIOLIB_ERR_NONE) { Serial.printf("[radio] sx1276 tx=%d\n", st); return false; }
-    return true;
+    (void)f;
+    Serial.println("[radio] TX blocked: RX-only firmware");
+    return false;
 }
 
 bool poll(ramses::Frame& out) {

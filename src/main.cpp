@@ -66,7 +66,7 @@ void loop() {
     }
 
     // 2) periodic sensor broadcasts (31E0 demand, 1298 CO2, 10E0 info)
-    orcon::tick(millis());
+    // orcon::tick(millis()); // RX-only: geen periodieke TX
 
     // 3) web / MQTT / OLED
     net::loop();
